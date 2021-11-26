@@ -49,6 +49,11 @@ $(document).on("click", ".editScore", function(e) {
 	$.ajax({url: "http://localhost:8080"+goUrl, 
 		success: function(result){
 			console.log(result)
+			$("#scoreDetails").html(result);
+			$("#scoreModal").modal('show');
+			setTimeout(()=>{
+				$("#scoreDetails").DataTable();
+			}, 100)
 		}
 	})
 });
