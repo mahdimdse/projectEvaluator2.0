@@ -46,16 +46,49 @@ $(document).ready(function(){
 $(document).on("click", ".editScore", function(e) {  
 	e.preventDefault();
 	const goUrl = $(this).attr("href");
-	$.ajax({url: "http://localhost:8080"+goUrl, 
+	$("#preloader").addClass("show");
+	$.ajax({
+		url: "http://localhost:8080"+goUrl,
 		success: function(result){
-			console.log(result)
 			$("#scoreDetails").html(result);
 			$("#scoreModal").modal('show');
-			setTimeout(()=>{
-				$("#scoreDetails").DataTable();
-			}, 100)
+			$("#preloader").removeClass("show");
+		},
+		error: function(err){
+			toastr.error(err);
+			$("#preloader").removeClass("show");
 		}
 	})
+});
+$("body").on("change", ".changeScore", function(e) {
+	e.preventDefault();
+	const userId = $(this).attr("data-userid");
+	const aspectId = $(this).attr("data-aspectid");
+	const newScore = $(this).val();
+	const newUrl = "/ProjectEvaluator/updateScore?userid="+userId+"&score="+newScore+"&aspectid="+aspectId;
+    $.ajax({
+        url: "http://localhost:8080"+newUrl,
+        success: function(response) {
+        	if(response == '1'){
+        		toastr.success("Score has been updated!");
+        		$(".updatedMessage").addClass("show");
+        		$("#clickToRefresh").show();
+        	}
+        	else {
+        		toastr.error("Something went wrong!");
+        	}
+        	setTimeout(()=>{
+        		/* location.reload(); */
+        	}, 3000)
+        },
+        error: function(err) {
+        	toastr.error(err);
+        }
+    });
+});
+$("body").on("click", "#clickToRefresh", function(e) {
+	e.preventDefault();
+	location.reload();
 });
 
 </script>

@@ -106,59 +106,7 @@
   <section id="statistics" class="statistics">
     <%@ include file="template/dashboardHeadNav.jsp"%>
     <div class="statistics-body">
-      <div class="function">
-        <p>Other Function</p>
-        <div class="fn">
-          <div>
-            <div class="bc-fn bc-red">
-              <span class="bc-span-red"><i class="far fa-chart-bar"></i></span>
-              <i class="fas fa-ellipsis-v c-white"></i>
-            </div>
-            <div class="fn-description">
-              <p>Optimization</p>
-              <div class="toggle-btn " onclick="this.classList.toggle('bc-toggle-red')">
-                <div class="inner-circle"></div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div class="bc-fn bc-orange">
-              <span class="bc-span-orange"><i class="far fa-chart-bar"></i></span>
-              <i class="fas fa-ellipsis-v c-white"></i>
-            </div>
-            <div class="fn-description">
-              <p>Smart Scan</p>
-              <div class="toggle-btn " onclick="this.classList.toggle('bc-toggle-orange')">
-                <div class="inner-circle "></div>
-              </div>
-            </div>
-          </div>
-          <div>
-            <div class="bc-fn bc-cyn">
-              <span class="bc-span-cyn"><i class="far fa-check-circle"></i></span>
-              <i class="fas fa-ellipsis-v c-white"></i>
-            </div>
-            <div class="fn-description">
-              <p>Malware</p>
-              <div class="toggle-btn " onclick="this.classList.toggle('bc-toggle-cyn')">
-                <div class="inner-circle "></div>
-              </div>
-            </div>
-          </div>
-          <div class="last_child">
-            <div class="bc-fn">
-              <span class="bc-span-white"><i class="fas fa-sync-alt"></i></span>
-              <i class="fas fa-ellipsis-v c-white"></i>
-            </div>
-            <div class="fn-description">
-              <p class="c-grey">Updater</p>
-              <div class="toggle-btn">
-                <div class="inner-circle"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
     </div>
   </section>
 </main>

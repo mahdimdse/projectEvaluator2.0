@@ -10,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import ee.taltech.java.dao.AspectsDao;
 import ee.taltech.java.dao.ProjectDao;
@@ -31,14 +32,30 @@ public class ScoreServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("title", "Scores");
-		try {
-        	ProjectDao projectDao = new ProjectDao();
-        	ResultSet prjct = projectDao.showProjects();
-        	request.setAttribute("data", prjct);
-        	
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+		HttpSession session = request.getSession(false);
+		String role_id = (String)session.getAttribute("role_id");
+		String user_id = (String)session.getAttribute("user_id");
+		if(role_id.equals("1")){
+			try {
+	        	ProjectDao projectDao = new ProjectDao();
+	        	ResultSet prjct = projectDao.showProjects();
+	        	request.setAttribute("data", prjct);
+	        	
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 		}
+		else {
+			try {
+	        	ProjectDao projectDao = new ProjectDao();
+	        	ResultSet prjct = projectDao.showProjectsByUserId(user_id);
+	        	request.setAttribute("data", prjct);
+	        	
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		
 		
 		try {
 			AspectsDao aspectDao = new AspectsDao();
@@ -50,8 +67,15 @@ public class ScoreServlet extends HttpServlet {
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
-		RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/scores.jsp");
-        dispatcher.forward(request, response);
+		if(role_id.equals("1")){
+			request.getRequestDispatcher("/WEB-INF/views/scores.jsp").forward(request, response);
+	        
+		}
+		else {
+			request.getRequestDispatcher("/WEB-INF/views/scorestudent.jsp").forward(request, response);;
+	        
+		}
+		
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {

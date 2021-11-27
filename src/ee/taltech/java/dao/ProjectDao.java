@@ -47,4 +47,23 @@ public class ProjectDao {
 		ResultSet queryResult = q1.executeQuery();
 		return queryResult;
 	}
+	
+	public int updateScore(String score, String score_to, String score_by, String aspect_id) throws ClassNotFoundException  {
+		String DELETE_SQL = "DELETE FROM scores WHERE " +
+	            " score_to = " + score_to + " AND score_by = " + score_by + " AND aspect_id = " + aspect_id + ";";
+
+		BasicDBAccessCloud q0 = new BasicDBAccessCloud(DELETE_SQL);
+		ResultSet queryResult1 = q0.executeQuery();
+		
+		String INSERT_SQL = "INSERT INTO scores" +
+	            " (score, score_to, score_by, aspect_id, is_deleted) VALUES " +
+	            " ('" + score + "', '" + score_to + "', '" + score_by + "', '" + aspect_id + "', 'false');";
+
+		BasicDBAccessCloud q1 = new BasicDBAccessCloud(INSERT_SQL);
+		ResultSet queryResult = q1.executeQuery();
+		
+		int isSuccess = queryResult == null ? 1 : 0 ;  
+		
+		return isSuccess;
+	}
 }

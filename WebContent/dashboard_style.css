@@ -1193,3 +1193,91 @@ main section {
 .score-form .form-control {
 	width: 40% !important;
 }
+#preloader {
+	position: fixed;
+	height: 100vh;
+	width: 100vw;
+	display: none;
+	place-items: center;
+	background-color: rgb(161 161 161 / 62%);
+}
+#preloader.show{
+	display: grid !important;
+}
+.pl {
+	display: block;
+	width: 6.25em;
+	height: 6.25em;
+}
+.pl__ring, .pl__ball {
+	animation: ring 2s ease-out infinite;
+}
+.pl__ball {
+	animation-name: ball;
+}
+
+/* Animation */
+@keyframes ring {
+	from {
+		stroke-dasharray: 0 257 0 0 1 0 0 258;
+	}
+	25% {
+		stroke-dasharray: 0 0 0 0 257 0 258 0;
+	}
+	50%, to {
+		stroke-dasharray: 0 0 0 0 0 515 0 0;
+	}
+}
+@keyframes ball {
+	from, 50% {
+		animation-timing-function: ease-in;
+		stroke-dashoffset: 1;
+	}
+	64% {
+		animation-timing-function: ease-in;
+		stroke-dashoffset: -109;
+	}
+	78% {
+		animation-timing-function: ease-in;
+		stroke-dashoffset: -145;
+	}
+	92% {
+		animation-timing-function: ease-in;
+		stroke-dashoffset: -157;
+	}
+	57%, 71%, 85%, 99%, to {
+		animation-timing-function: ease-out;
+		stroke-dashoffset: -163;
+	}
+}
+.updatedMessage {
+	display: none;
+	animation: beat 1s infinite;
+}
+.updatedMessage.show{
+	display: block;
+}
+.updatedMessage span {
+	margin-left: 10px;
+}
+.dot{
+	background: red;
+	width: 10px;
+	height: 10px;
+	border-radius: 50%;
+	padding-right: 10px;
+	display: inline-block;
+}
+@keyframes beat{
+	0% {
+		opacity: 0;
+	}
+	
+	100%{
+		opacity: 1;
+	}
+	
+}
+#clickToRefresh{
+	display: none;
+}

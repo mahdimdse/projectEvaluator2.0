@@ -21,10 +21,12 @@
       		</thead>
       		<tbody>
       			<%
+      			String project_id;
       			int totalSum = (int)request.getAttribute("totalSum");
       			ResultSet projs = (ResultSet)request.getAttribute("data");
       			projs.beforeFirst();
 				while (projs.next()){
+					project_id = projs.getString("id");
 				    %>
 				    <tr style="background-color: #747474; color: #fff; ">
 				      <td>
@@ -38,20 +40,48 @@
 				        <%= projs.getString("last_name") %>
 				      </td>
 				    </tr>
-				    <% 
-				    String SELECT_SQL = "SELECT users.id AS userid, users.first_name, users.last_name, SUM(COALESCE(scores.score, 0)) AS total FROM users, assigned_table LEFT OUTER JOIN scores ON scores.score_to = assigned_table.user_id WHERE assigned_table.user_id = users.id AND assigned_table.project_id = '" + projs.getString("id") + "' GROUP BY scores.score_to, users.id;";
-					BasicDBAccessCloud q1 = new BasicDBAccessCloud(SELECT_SQL);
-					ResultSet queryResult = q1.executeQuery();
-					queryResult.beforeFirst();
-					while (queryResult.next()){
+				    <% } %>
+				    <%
+				    int total = 0;
+					String htmlWrite = "<tr><thead><tr><th></th><th>Aspect</th><th>Score</th></tr><thead><tbody>";
+					
+					String EA_SQL = "SELECT evaluation_aspect.name, evaluation_aspect.id, COALESCE(scores.score, 0) as score FROM evaluation_aspect FULL OUTER JOIN scores ON scores.aspect_id = evaluation_aspect.id WHERE scores.score_to = '" + user_id + "';";
+					BasicDBAccessCloud q2 = new BasicDBAccessCloud(EA_SQL);
+					ResultSet aspectResult = q2.executeQuery();
+					String evaluatedIds = "";
+						aspectResult.beforeFirst();
+						while (aspectResult.next()){
+							total += Integer.valueOf(aspectResult.getString("score"));
+							evaluatedIds += ","+aspectResult.getString("id");
+							htmlWrite += "<tr><td></td><td>" + aspectResult.getString("name") + "</td><td>" + aspectResult.getString("score") + "</td></tr>";
+						}
+					
+					evaluatedIds = evaluatedIds.startsWith(",") ? evaluatedIds.substring(1) : evaluatedIds;
+					
+					if(evaluatedIds.equals("")){
+						String NEA_SQL = "SELECT evaluation_aspect.name, evaluation_aspect.id FROM evaluation_aspect;";
+						BasicDBAccessCloud q3 = new BasicDBAccessCloud(NEA_SQL);
+						ResultSet naspectResult = q3.executeQuery();
+						
+							naspectResult.beforeFirst();
+							while (naspectResult.next()){
+								htmlWrite += "<tr><td>" + naspectResult.getString("name") + "</td><td>" + 0 + "</td></tr>";
+							}
+					}
+					else {
+						String NEA_SQL = "SELECT evaluation_aspect.name, evaluation_aspect.id FROM evaluation_aspect WHERE evaluation_aspect.id NOT IN ("+evaluatedIds+");";
+						BasicDBAccessCloud q3 = new BasicDBAccessCloud(NEA_SQL);
+						ResultSet naspectResult = q3.executeQuery();
+						
+							naspectResult.beforeFirst();
+							while (naspectResult.next()){
+								htmlWrite += "<tr><td>" + naspectResult.getString("name") + "</td><td>" + 0 + "</td></tr>";
+							}
+					}
+					htmlWrite += "<tr><td></td><td></td><td>Total: "+total+"</td></tr>";
+					htmlWrite += "</tbody></tr>";
 				    %>
-				    <tr>
-				    	<td colspan="2"><i class="fa fa-user"></i> <%= queryResult.getString("first_name") %> <%= queryResult.getString("last_name") %></td>
-				    	<td>Score : <%= queryResult.getString("total") %> / <%= totalSum %> <a title="Edit Score" class="ml-1 editScore" href="<%= request.getContextPath() %>/scoreDetails?project_id=<%=projs.getString("id")%>&user_id=<%=projs.getString("userid")%>"><i class="fa fa-pencil"></i></a></td>
-				    </tr>
-				   	<% 
-					} 
-				} %>
+				    <%= htmlWrite %>
       		</tbody>
       		</table>
     	</div>

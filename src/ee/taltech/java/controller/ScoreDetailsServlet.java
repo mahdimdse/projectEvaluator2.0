@@ -39,7 +39,7 @@ public class ScoreDetailsServlet extends HttpServlet {
 			aspectResult.beforeFirst();
 			while (aspectResult.next()){
 				evaluatedIds += ","+aspectResult.getString("id");
-				htmlWrite += "<tr><td>" + aspectResult.getString("name") + "</td><td>" + makeDropdown(aspectResult.getString("score")) + "</td></tr>";
+				htmlWrite += "<tr><td>" + aspectResult.getString("name") + "</td><td>" + makeDropdown(aspectResult.getString("score"), user_id, aspectResult.getString("id")) + "</td></tr>";
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -54,7 +54,7 @@ public class ScoreDetailsServlet extends HttpServlet {
 			try {
 				naspectResult.beforeFirst();
 				while (naspectResult.next()){
-					htmlWrite += "<tr><td>" + naspectResult.getString("name") + "</td><td>" + makeDropdown("0") + "</td></tr>";
+					htmlWrite += "<tr><td>" + naspectResult.getString("name") + "</td><td>" + makeDropdown("0", user_id, naspectResult.getString("id")) + "</td></tr>";
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -67,7 +67,7 @@ public class ScoreDetailsServlet extends HttpServlet {
 			try {
 				naspectResult.beforeFirst();
 				while (naspectResult.next()){
-					htmlWrite += "<tr><td>" + naspectResult.getString("name") + "</td><td>" + makeDropdown("0") + "</td></tr>";
+					htmlWrite += "<tr><td>" + naspectResult.getString("name") + "</td><td>" + makeDropdown("0", user_id, naspectResult.getString("id")) + "</td></tr>";
 				}
 			} catch (SQLException e) {
 				e.printStackTrace();
@@ -83,8 +83,8 @@ public class ScoreDetailsServlet extends HttpServlet {
 		doGet(request, response);
 	}
 	
-	private String makeDropdown(String selectedValue){
-		String selectHtml = "<select class='form-control form-control-sm changeScore'>";
+	private String makeDropdown(String selectedValue, String user_id, String aspect_id){
+		String selectHtml = "<select data-userid="+user_id+" data-aspectid="+aspect_id+" class='form-control form-control-sm changeScore'>";
 		for(int i=0;i<=10;i++){
 			String isSelected = "";
 			if(selectedValue.equals(String.valueOf(i))) {

@@ -32,14 +32,38 @@ public class NewUserServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("title", "Sign Up");
+		int countedLecturer = 0;
 		try {
 			UserDao user = new UserDao();
-			ResultSet usr = user.getAllUsersRole();
-			request.setAttribute("roleData", usr);
-		}
-		catch (ClassNotFoundException e){
+			ResultSet usrCount = user.countUsersByRole(1);
+			while (usrCount.next()){
+				countedLecturer = Integer.valueOf(usrCount.getString("count"));	
+			}
+		} catch (ClassNotFoundException e){
 			
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+		if(countedLecturer < 1){
+			try {
+				UserDao user = new UserDao();
+				ResultSet usr = user.getAllUsersRole();
+				request.setAttribute("roleData", usr);
+			} catch (ClassNotFoundException e){
+				
+			}
+		}
+		else {
+			try {
+				UserDao user = new UserDao();
+				ResultSet usr = user.getStudentRole();
+				request.setAttribute("roleData", usr);
+			} catch (ClassNotFoundException e){
+				
+			}
+		}
+		
+		
 		request.getRequestDispatcher("/WEB-INF/views/signup.jsp").forward(request, response);
 	}
 

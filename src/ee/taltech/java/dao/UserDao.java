@@ -46,6 +46,13 @@ public class UserDao {
 		return queryResult;
 	}
 	
+	public ResultSet getStudentRole() throws ClassNotFoundException  {
+		String SELECT_SQL = "SELECT * FROM user_role WHERE id = 2;";
+		BasicDBAccessCloud q1 = new BasicDBAccessCloud(SELECT_SQL);
+		ResultSet queryResult = q1.executeQuery();
+		return queryResult;
+	}
+	
 	public ResultSet countUsersByRole(int role_id) throws ClassNotFoundException  {
 		String SELECT_SQL = "SELECT COUNT(*) FROM users WHERE role_id = '" + role_id + "';";
 		BasicDBAccessCloud q1 = new BasicDBAccessCloud(SELECT_SQL);
