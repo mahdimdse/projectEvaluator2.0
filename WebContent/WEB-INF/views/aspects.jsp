@@ -18,8 +18,10 @@
       			<%
 				ResultSet aspcts = (ResultSet)request.getAttribute("dataAspects");
 				while (aspcts.next()){
+					String aspect_id = aspcts.getString("id");
+					String created_by = aspcts.getString("created_by");
 				    %>
-				    <tr>
+				    <tr id="ascpt-<%= aspect_id %>">
 				      <td>
 				        <%= aspcts.getString("name") %>
 				      </td>	
@@ -29,6 +31,9 @@
 				      </td>	  
 				      <td>
 				        <%= aspcts.getString("created_at") %>
+				        <% if(created_by.equals(user_id)){ %>
+				        	<a data-aspectid="<%= aspect_id %>" href="<%= request.getContextPath() %>/delete?table=evaluation_aspect&rec_id=<%= aspect_id %>" class="text-danger deleteRecord" title="Delete Aspect"><i class="fa fa-trash"></i></a>
+				        <% } %>
 				      </td>
 				    </tr>
 				<% 		
@@ -62,4 +67,22 @@
     </div>
   </section>
 </main>
+<div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="scoreModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Delete Aspect</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <h5>Are you sure, you want to delete this record?</h5>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-sm confirm-delete">Yes</button>
+      </div>
+    </div>
+  </div>
+</div>
 <%@ include file="template/dashboardFooter.jsp"%>

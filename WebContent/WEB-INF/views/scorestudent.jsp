@@ -65,7 +65,7 @@
 						
 							naspectResult.beforeFirst();
 							while (naspectResult.next()){
-								htmlWrite += "<tr><td>" + naspectResult.getString("name") + "</td><td>" + 0 + "</td></tr>";
+								htmlWrite += "<tr><td></td><td>" + naspectResult.getString("name") + "</td><td>" + 0 + "(Not Scored)</td></tr>";
 							}
 					}
 					else {
@@ -75,7 +75,7 @@
 						
 							naspectResult.beforeFirst();
 							while (naspectResult.next()){
-								htmlWrite += "<tr><td>" + naspectResult.getString("name") + "</td><td>" + 0 + "</td></tr>";
+								htmlWrite += "<tr><td></td><td>" + naspectResult.getString("name") + "</td><td>" + 0 + "(Not Scored)</td></tr>";
 							}
 					}
 					htmlWrite += "<tr><td></td><td></td><td>Total: "+total+"</td></tr>";

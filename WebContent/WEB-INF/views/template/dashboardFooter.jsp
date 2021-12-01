@@ -43,6 +43,35 @@ $(document).ready(function(){
 		window.location.href = "<%= request.getContextPath() %>/logout";
 	}
 });
+
+let delete_query = "";
+let delete_id = "";
+$(document).on("click", ".deleteRecord", function(e) {  
+	e.preventDefault();
+	deleteQuery = $(this).attr("href");
+	delete_id = $(this).attr("data-aspectid");
+	$("#deleteModal").modal('show');
+});
+
+$(document).on("click", ".confirm-delete", function(e) {  
+	e.preventDefault();
+	$("#preloader").addClass("show");
+	$.ajax({
+		url: "http://localhost:8080"+deleteQuery,
+		success: function(result){
+			toastr.success("Successfully Deleted!")
+			$("#deleteModal").modal('hide');
+			$("#preloader").removeClass("show");
+			$("#ascpt-"+delete_id).remove();
+		},
+		error: function(err){
+			toastr.error(err);
+			$("#deleteModal").modal('hide');
+			$("#preloader").removeClass("show");
+		}
+	})
+});
+
 $(document).on("click", ".editScore", function(e) {  
 	e.preventDefault();
 	const goUrl = $(this).attr("href");

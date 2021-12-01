@@ -6,16 +6,14 @@ import ee.taltech.java.dbconfig.BasicDBAccessCloud;
 import ee.taltech.java.model.User;
 
 public class UserDao {
-	public int registerUser(User user) throws Exception  {
+	public ResultSet registerUser(User user) throws Exception  {
 		String INSERT_SQL = "INSERT INTO users" +
 	            " (first_name, last_name, username, email, password, role_id, is_deleted) VALUES " +
 	            " ('" + user.getFirst_name() + "', '" + user.getLast_name() + "', '" + user.getUsername() + "', '" + user.getEmail() + "', '" + user.getPassword() + "', '" + user.getRole_id() + "', '" + user.getIs_deleted() + "');";
 
 		BasicDBAccessCloud q1 = new BasicDBAccessCloud(INSERT_SQL);
-		ResultSet queryResult = q1.executeQuery();
-		
-		int isSuccess = queryResult == null ? 1 : 0 ;  
-		return isSuccess;
+		ResultSet queryResult = q1.executeQuery();  
+		return queryResult;
 	}
 	
 	public ResultSet authenticateUser(String email, String password) throws ClassNotFoundException  {
@@ -55,6 +53,13 @@ public class UserDao {
 	
 	public ResultSet countUsersByRole(int role_id) throws ClassNotFoundException  {
 		String SELECT_SQL = "SELECT COUNT(*) FROM users WHERE role_id = '" + role_id + "';";
+		BasicDBAccessCloud q1 = new BasicDBAccessCloud(SELECT_SQL);
+		ResultSet queryResult = q1.executeQuery();
+		return queryResult;
+	}
+	
+	public ResultSet getUsersbyEmail(String email) throws ClassNotFoundException  {
+		String SELECT_SQL = "SELECT * FROM users WHERE email = '" + email + "';";
 		BasicDBAccessCloud q1 = new BasicDBAccessCloud(SELECT_SQL);
 		ResultSet queryResult = q1.executeQuery();
 		return queryResult;

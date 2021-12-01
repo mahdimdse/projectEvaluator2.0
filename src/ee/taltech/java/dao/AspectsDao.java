@@ -21,7 +21,7 @@ public class AspectsDao {
 	}
 	
 	public ResultSet showAspects() throws ClassNotFoundException  {
-		String SELECT_SQL = "SELECT evaluation_aspect.name, evaluation_aspect.created_at, users.first_name, users.last_name FROM evaluation_aspect, users WHERE users.id = evaluation_aspect.created_by;";
+		String SELECT_SQL = "SELECT evaluation_aspect.id, evaluation_aspect.name, evaluation_aspect.created_at, evaluation_aspect.created_by, users.first_name, users.last_name FROM evaluation_aspect, users WHERE users.id = evaluation_aspect.created_by;";
 		BasicDBAccessCloud q1 = new BasicDBAccessCloud(SELECT_SQL);
 		ResultSet queryResult = q1.executeQuery();
 		return queryResult;

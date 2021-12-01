@@ -67,6 +67,7 @@ public class NewUserServlet extends HttpServlet {
 		request.getRequestDispatcher("/WEB-INF/views/signup.jsp").forward(request, response);
 	}
 
+	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String first_name = request.getParameter("first_name");
 		String last_name = request.getParameter("last_name");
@@ -76,53 +77,79 @@ public class NewUserServlet extends HttpServlet {
 		String role_id = request.getParameter("role_id");
 		String encrypted = "";
 		
-		try {
-			PasswordManager pw = new PasswordManager();
-			encrypted = pw.encrypt(password);
-			
-			User user = new User(first_name, last_name, username, email, encrypted, role_id, "false");
-			
-			try {
-	        	UserDao userDao = new UserDao();
-	        	userDao.registerUser(user);
-	        	
-	        	ResultSet authenticatedUser = userDao.authenticateUser(user.getEmail(), encrypted);
-	        	
-	        	try {
-					if (authenticatedUser.next()){
-						HttpSession session = request.getSession(true);
-						session.setAttribute("user_id", authenticatedUser.getString("id"));
-						session.setAttribute("first_name", authenticatedUser.getString("first_name"));
-						session.setAttribute("last_name", authenticatedUser.getString("last_name"));
-						
-						request.setAttribute("is_success", 1);
-						request.setAttribute("message", "Successfully Logged In!");
-
-						request.getRequestDispatcher("/WEB-INF/views/dashboard.jsp").forward(request, response);
-					}
-					else {
-						request.setAttribute("is_success", 0);
-						request.setAttribute("message", "Email or Password Wrong!");
-						request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
-					}
-				} catch (SQLException e) {
-					e.printStackTrace();
-					
-					request.setAttribute("is_success", 0);
-					request.setAttribute("message", "SQL Error Occurred!");
-					request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
-				}
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+		
+    	try {
+    		UserDao userDaoC = new UserDao();
+			ResultSet existsUser = userDaoC.getUsersbyEmail(email);
+			if(existsUser.isBeforeFirst()){
 				request.setAttribute("is_success", 0);
-				request.setAttribute("message", "Authentication & Signup Failed!");
+				request.setAttribute("message", "Email is already registered, Please login!");
 				request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
 			}
-		} catch (Exception e1) {
-			e1.printStackTrace();
-			request.setAttribute("is_success", 0);
-			request.setAttribute("message", "Something went wrong!!");
-			request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+			else {
+				try {
+					PasswordManager pw = new PasswordManager();
+					encrypted = pw.encrypt(password);
+					
+					User user = new User(first_name, last_name, username, email, encrypted, role_id, "false");
+					
+					try {
+			        	UserDao userDao = new UserDao();
+			        	ResultSet newUser = userDao.registerUser(user);
+			        	try {
+				        	UserDao userDao1 = new UserDao();
+				        	ResultSet authenticatedUser = userDao1.authenticateUser(email, encrypted);
+				        	
+				        	try {
+								if (authenticatedUser.next()){
+									HttpSession session = request.getSession(true);
+									session.setAttribute("user_id", authenticatedUser.getString("id"));
+									session.setAttribute("first_name", authenticatedUser.getString("first_name"));
+									session.setAttribute("last_name", authenticatedUser.getString("last_name"));
+									session.setAttribute("role_id", authenticatedUser.getString("role_id"));
+									
+									
+									request.setAttribute("is_success", 1);
+									request.setAttribute("message", "Successfully Logged In!");
+									
+									response.sendRedirect("dashboard");
+								}
+								else {
+									request.setAttribute("is_success", 0);
+									request.setAttribute("message", "Email or Password Wrong!");
+									request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+								}
+							} catch (SQLException e) {
+								e.printStackTrace();
+								
+								request.setAttribute("is_success", 0);
+								request.setAttribute("message", "SQL Error Occurred!");
+								request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+							}
+						} catch (ClassNotFoundException e) {
+							e.printStackTrace();
+							request.setAttribute("is_success", 0);
+							request.setAttribute("message", "Authentication Failed!");
+							request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+						}
+					} catch (ClassNotFoundException e) {
+						e.printStackTrace();
+						request.setAttribute("is_success", 0);
+						request.setAttribute("message", "Authentication & Signup Failed!");
+						request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+					}
+				} catch (Exception e1) {
+					e1.printStackTrace();
+					request.setAttribute("is_success", 0);
+					request.setAttribute("message", "Something went wrong!!");
+					request.getRequestDispatcher("/WEB-INF/views/login.jsp").forward(request, response);
+				}
+			}
+		} catch (ClassNotFoundException e2) {
+			e2.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} 
 	}
 
