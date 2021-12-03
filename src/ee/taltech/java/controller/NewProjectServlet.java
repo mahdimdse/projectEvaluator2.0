@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import ee.taltech.java.dao.AssignProjectDao;
 import ee.taltech.java.dao.ProjectDao;
+import ee.taltech.java.dbconfig.BasicDBAccessCloud;
 import ee.taltech.java.model.AssignProject;
 import ee.taltech.java.model.PasswordManager;
 import ee.taltech.java.model.Project;
@@ -39,6 +40,19 @@ public class NewProjectServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setAttribute("title", "Project");
 		
+		String projectId = request.getParameter("projectid");
+		String isOpen =request.getParameter("open");
+		if(isOpen != null){
+			try {
+	        	ProjectDao projectDao = new ProjectDao();
+	        	projectDao.updateIsOpen(projectId, isOpen);
+	        	
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		
 		HttpSession session = request.getSession(false);
         String created_by = (String) session.getAttribute("user_id");
 		try {
@@ -48,8 +62,10 @@ public class NewProjectServlet extends HttpServlet {
 			while (oldEntry.next()){
 				PasswordManager pw = new PasswordManager();
 				String oldEntryId = pw.encrypt(oldEntry.getString("id"));
+				request.setAttribute("assigned_project_id", oldEntry.getString("id"));
 				request.setAttribute("assigned_project", oldEntryId);
 				request.setAttribute("assigned_project_name", oldEntry.getString("name"));
+				request.setAttribute("assigned_project_status", oldEntry.getString("is_open"));
 			}
 			 
 		} catch (ClassNotFoundException e) {
@@ -94,19 +110,30 @@ public class NewProjectServlet extends HttpServlet {
     		} catch (ClassNotFoundException e) {
     			e.printStackTrace();
     		}
+            response.sendRedirect("newproject");
         }
         else {
-        	AssignProject newAssign = new AssignProject(projectExists(name), created_by);
-			AssignProjectDao assingProjectDao = new AssignProjectDao();
-			try {
-				assingProjectDao.assignProject(newAssign);
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			}
+        	String is_open = isProjectOpen(projectExists(name));
+        	if(is_open.equals("f")){
+        		request.setAttribute("title", "Project");
+        		
+        		request.setAttribute("is_success", 0);
+        		request.setAttribute("message", "This project is not public!");
+        		request.getRequestDispatcher("/WEB-INF/views/projectregister.jsp").forward(request, response);
+        	}
+        	else {
+        		AssignProject newAssign = new AssignProject(projectExists(name), created_by);
+    			AssignProjectDao assingProjectDao = new AssignProjectDao();
+    			try {
+    				assingProjectDao.assignProject(newAssign);
+    			} catch (ClassNotFoundException e) {
+    				e.printStackTrace();
+    			}
+    			response.sendRedirect("newproject");
+        	}
+        	
         }
         
-        
-        response.sendRedirect("newproject");
 	}
 	
 	public String projectExists(String nameOrEncId){
@@ -126,6 +153,22 @@ public class NewProjectServlet extends HttpServlet {
 		}
 		
 		return project;
+	}
+	
+	public String isProjectOpen(String project_id) {
+		String is_open = "f";
+		String SELECT_SQL = "SELECT is_open FROM projects WHERE id = '"+ project_id +"';";
+		BasicDBAccessCloud q1 = new BasicDBAccessCloud(SELECT_SQL);
+		ResultSet queryResult = q1.executeQuery();
+		try {
+			queryResult.beforeFirst();
+			while(queryResult.next()){
+				is_open = queryResult.getString("is_open");
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}		
+		return is_open;
 	}
 
 }

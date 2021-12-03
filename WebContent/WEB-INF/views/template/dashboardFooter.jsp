@@ -91,6 +91,7 @@ $(document).on("click", ".editScore", function(e) {
 });
 $("body").on("change", ".changeScore", function(e) {
 	e.preventDefault();
+	$("#please-wait").addClass("show");
 	const userId = $(this).attr("data-userid");
 	const aspectId = $(this).attr("data-aspectid");
 	const newScore = $(this).val();
@@ -102,16 +103,16 @@ $("body").on("change", ".changeScore", function(e) {
         		toastr.success("Score has been updated!");
         		$(".updatedMessage").addClass("show");
         		$("#clickToRefresh").show();
+        		$("#please-wait").removeClass("show");
         	}
         	else {
+        		$("#please-wait").removeClass("show");
         		toastr.error("Something went wrong!");
         	}
-        	setTimeout(()=>{
-        		/* location.reload(); */
-        	}, 3000)
         },
         error: function(err) {
         	toastr.error(err);
+        	$("#please-wait").removeClass("show");
         }
     });
 });

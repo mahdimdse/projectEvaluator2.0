@@ -23,8 +23,10 @@
 				    %>
 				    <tr>
 				      <td>
+				      	<a href="<%= request.getContextPath() %>/studentdetails?id=<%= stdnt.getString("id") %>">
 				        <%= stdnt.getString("first_name") %>
 				        <%= stdnt.getString("last_name") %>
+				        </a>
 				      </td>	
 				      <td>
 				        <%= stdnt.getString("email") %>

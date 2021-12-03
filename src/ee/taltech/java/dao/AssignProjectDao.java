@@ -27,7 +27,7 @@ public class AssignProjectDao {
 	}
 	
 	public ResultSet showProjectsByUserId(String user_id) throws ClassNotFoundException  {
-		String SELECT_SQL = "SELECT projects.* FROM assigned_table, projects WHERE assigned_table.user_id = '"+ user_id +"';";
+		String SELECT_SQL = "SELECT projects.*, users.first_name, users.last_name FROM assigned_table, projects, users WHERE assigned_table.project_id = projects.id AND projects.created_by = users.id AND assigned_table.user_id = '"+ user_id +"';";
 		BasicDBAccessCloud q1 = new BasicDBAccessCloud(SELECT_SQL);
 		ResultSet queryResult = q1.executeQuery();
 		return queryResult;

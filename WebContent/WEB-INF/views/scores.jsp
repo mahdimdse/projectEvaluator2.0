@@ -6,7 +6,7 @@
 
 <main>
   <section id="main" class="main table-involved table-involved-full">
-  		<h4>${title} <button class="btn btn-primary btn-sm" id="clickToRefresh">Click to Refresh</button></h4>
+  		<h4>${title} <a href="<%= request.getContextPath() %>/scoressorted"><button class="btn btn-secondary btn-sm">Show Sorted Score <i class="fas fa-sort-numeric-down"></i></button></a> <button class="btn btn-primary btn-sm" id="clickToRefresh">Click to Refresh</button></h4>
   		<div class="updatedMessage">
   			<div class="dot"></div><span>You have updated the scores! Please refresh to see them!</span>
   		</div>
@@ -46,8 +46,8 @@
 					while (queryResult.next()){
 				    %>
 				    <tr>
-				    	<td colspan="2"><i class="fa fa-user"></i> <%= queryResult.getString("first_name") %> <%= queryResult.getString("last_name") %></td>
-				    	<td>Score : <%= queryResult.getString("total") %> / <%= totalSum %> <a title="Edit Score" class="ml-1 editScore" href="<%= request.getContextPath() %>/scoreDetails?project_id=<%=projs.getString("id")%>&user_id=<%=projs.getString("userid")%>"><i class="fa fa-pencil"></i></a></td>
+				    	<td colspan="2"><a target="_blank" class="user-link" href="<%= request.getContextPath() %>/studentdetails?id=<%= queryResult.getString("userid") %>"><i class="fa fa-user"></i> <%= queryResult.getString("first_name") %> <%= queryResult.getString("last_name") %></a></td>
+				    	<td>Score : <%= queryResult.getString("total") %> / <%= totalSum %> <a title="Edit Score" class="ml-1 editScore" href="<%= request.getContextPath() %>/scoreDetails?project_id=<%=projs.getString("id")%>&user_id=<%=queryResult.getString("userid")%>"><i class="fa fa-pencil"></i></a></td>
 				    </tr>
 				   	<% 
 					} 
@@ -63,6 +63,9 @@
 <div class="modal fade" id="scoreModal" tabindex="-1" role="dialog" aria-labelledby="scoreModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
+    <div id="please-wait" class="">
+	     <p>Updating <i class="fa fa-spin fa-spinner"></i></p>
+    </div>
       <div class="modal-header">
         <h5 class="modal-title">Scores</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">

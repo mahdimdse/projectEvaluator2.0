@@ -9,6 +9,9 @@
        <% 
        String assigned_project = (String)request.getAttribute("assigned_project");
        String assigned_project_name = (String)request.getAttribute("assigned_project_name");
+       String assigned_project_status = (String)request.getAttribute("assigned_project_status");
+       String assigned_project_id = (String)request.getAttribute("assigned_project_id");
+       
        if(assigned_project == null){ %>
       		<form action="<%= request.getContextPath() %>/newproject" method="post">
                
@@ -28,6 +31,13 @@
 		        <%= firstName + ' '+ lastName %>
 		        !</h1>
 		        <p>You are assigned to <b><%= assigned_project_name %></b> project. You can refer the project to others by sharing this code: <b><%= assigned_project %></b></p>
+		        <p>
+		        <%if(assigned_project_status.equals("t")) { %>
+		      	<a href="<%= request.getContextPath() %>/newproject?projectid=<%= assigned_project_id %>&open=false"><button class="btn btn-sm btn-warning">Make it Private</button></a>
+		      <% } else { %>
+		      	<a href="<%= request.getContextPath() %>/newproject?projectid=<%= assigned_project_id %>&open=true"><button class="btn btn-sm btn-success">Make it Public</button></a>
+		      <% } %>
+		      </p>
 		      </div>
 		      <div class="baner-png">
 		      </div>

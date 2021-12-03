@@ -4,43 +4,77 @@
 
 <main>
   <section id="main" class="main table-involved table-involved-full">
-  		<h4>${title}</h4>
+  		<h4><i class="fa fa-chevron-left" onCLick="history.back()"></i> Student Detail</h4>
        <div class="table-container table-responsive">
-      		<table class="table table-striped table-hover border" id="dataTable">
-      		<thead>
-	      		<tr>
-	      			<th>Name</th>
-	      			<th>Email</th>
-	      			<th>Username</th>
-	      			<th>Signed Up At</th>
-	      		</tr>
-      		</thead>
-      		<tbody>
       			<%
 				ResultSet stdnt = (ResultSet)request.getAttribute("dataStudents");
       			stdnt.beforeFirst();
 				while (stdnt.next()){
 				    %>
-				    <tr>
-				      <td>
-				        <%= stdnt.getString("first_name") %>
-				        <%= stdnt.getString("last_name") %>
-				      </td>	
-				      <td>
-				        <%= stdnt.getString("email") %>
-				      </td>	 
-				      <td>
-				        <%= stdnt.getString("username") %>
-				      </td> 
-				      <td>
-				        <%= stdnt.getString("created_at") %>
-				      </td>
-				    </tr>
+				    <div class="form-group row">
+					    <label for="staticEmail" class="col-sm-2 col-form-label">Name</label>
+					    <div class="col-sm-7">
+					      <input type="text" readonly class="form-control" disabled value="<%= stdnt.getString("first_name") %> <%= stdnt.getString("last_name") %>">
+					    </div>
+					</div>
+					<div class="form-group row">
+					    <label for="staticEmail" class="col-sm-2 col-form-label">Email</label>
+					    <div class="col-sm-7">
+					      <input type="text" readonly class="form-control" disabled value="<%= stdnt.getString("email") %>">
+					    </div>
+					</div>
+					<div class="form-group row">
+					    <label for="staticEmail" class="col-sm-2 col-form-label">Username</label>
+					    <div class="col-sm-7">
+					      <input type="text" readonly class="form-control" disabled value="<%= stdnt.getString("username") %>">
+					    </div>
+					</div>
+					<div class="form-group row">
+					    <label for="staticEmail" class="col-sm-2 col-form-label">Signed Up at</label>
+					    <div class="col-sm-7">
+					      <input type="text" readonly class="form-control" disabled value="<%= stdnt.getString("created_at") %>">
+					    </div>
+					</div>
 				<% 		
 				}
 				%>
-      		</tbody>
-      		</table>
+    	</div>
+    	
+    	<h4>Project Info</h4>
+       	<div class="table-container table-responsive">
+      			<%
+				ResultSet prj = (ResultSet)request.getAttribute("dataProjects");
+				if(prj.isBeforeFirst()){
+				prj.beforeFirst();
+				while (prj.next()){
+				    %>
+				    <div class="form-group row">
+					    <label for="staticEmail" class="col-sm-2 col-form-label">Project Name</label>
+					    <div class="col-sm-7">
+					      <input type="text" readonly class="form-control" disabled value="<%= prj.getString("name") %>">
+					    </div>
+					</div>
+					<div class="form-group row">
+					    <label for="staticEmail" class="col-sm-2 col-form-label">Created By</label>
+					    <div class="col-sm-7">
+					      <input type="text" readonly class="form-control" disabled value="<%= prj.getString("first_name") %> <%= prj.getString("last_name") %>">
+					    </div>
+					</div>
+					<div class="form-group row">
+					    <label for="staticEmail" class="col-sm-2 col-form-label">Created at</label>
+					    <div class="col-sm-7">
+					      <input type="text" readonly class="form-control" disabled value="<%= prj.getString("created_at") %>">
+					    </div>
+					</div>
+				<% 		
+				}
+				}
+				else {
+					%>
+					Not assigned to a project yet!
+					<%
+				}
+				%>
     	</div>
   </section>
   <section id="statistics" class="statistics form-fields">

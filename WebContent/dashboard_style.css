@@ -1282,3 +1282,43 @@ main section {
 #clickToRefresh{
 	display: none;
 }
+.user-link {
+	color: #000;
+}
+#please-wait {
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	display: none;
+	place-items: center;
+	background-color: rgb(161 161 161 / 90%);
+	z-index: 999;
+}
+#please-wait.show{
+	display: grid !important;
+}
+#please-wait.show p{
+	color: #fff;
+	font-size: 14px;
+}
+.champion {
+	color: #ffeb00 !important;
+    text-shadow: 0px 0px 5px #000000;
+    animation: beatheart .25s infinite alternate;
+	transform-origin: center;
+}
+.first-runnerup {
+	color: #f3f3f3 !important;
+    text-shadow: 0px 0px 5px #000000;
+	animation: beatheart .25s infinite alternate;
+	transform-origin: center;
+}
+.second-runnerup {
+	color: #ffda55 !important;
+    text-shadow: 0px 0px 5px #000000;
+    animation: beatheart .25s infinite alternate;
+	transform-origin: center;
+}
+@keyframes beatheart{
+	to { transform: scale(1.2); }
+}

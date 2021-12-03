@@ -2,6 +2,7 @@ package ee.taltech.java.dao;
 
 import java.sql.ResultSet;
 //import java.util.ArrayList;
+import java.sql.SQLException;
 
 import ee.taltech.java.dbconfig.BasicDBAccessCloud;
 import ee.taltech.java.model.Project;
@@ -44,6 +45,13 @@ public class ProjectDao {
 	public ResultSet showProjectsByProjectId(String project_id) throws ClassNotFoundException  {
 		String SELECT_SQL = "SELECT * FROM assigned_table, projects WHERE projects.id = assigned_table.project_id AND assigned_table.project_id = '"+ project_id +"';";
 		BasicDBAccessCloud q1 = new BasicDBAccessCloud(SELECT_SQL);
+		ResultSet queryResult = q1.executeQuery();
+		return queryResult;
+	}
+	
+	public ResultSet updateIsOpen(String project_id, String is_open) throws ClassNotFoundException  {
+		String UPDATE_SQL = "UPDATE projects SET is_open = '" + is_open + "' WHERE id = '"+ project_id +"';";
+		BasicDBAccessCloud q1 = new BasicDBAccessCloud(UPDATE_SQL);
 		ResultSet queryResult = q1.executeQuery();
 		return queryResult;
 	}

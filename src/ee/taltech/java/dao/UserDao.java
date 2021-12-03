@@ -64,4 +64,11 @@ public class UserDao {
 		ResultSet queryResult = q1.executeQuery();
 		return queryResult;
 	}
+	
+	public ResultSet getScorebyUserSorted() throws ClassNotFoundException  {
+		String SELECT_SQL = "SELECT users.id as userid, users.first_name, users.last_name, projects.id as projectid, projects.name, SUM(scores.score) as scored FROM users, projects, scores, assigned_table WHERE scores.score_to = users.id AND assigned_table.project_id = projects.id AND assigned_table.user_id = users.id GROUP BY projects.id, users.id ORDER BY scored DESC;";
+		BasicDBAccessCloud q1 = new BasicDBAccessCloud(SELECT_SQL);
+		ResultSet queryResult = q1.executeQuery();
+		return queryResult;
+	}
 }
